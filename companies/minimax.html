@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniMax 秋招详情</title>
+<script>
+(function(){
+  var t = localStorage.getItem('theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+
+:root { color-scheme: light dark; }
+[data-theme="light"] {
+  --bg: #ffffff; --surface: #f6f8fa; --surface2: #eaeef2;
+  --border: #d0d7de; --border2: #afb8c1;
+  --text: #24292f; --muted: #57606a; --subtle: #8c959f;
+  --accent: #0969da; --accent-bg: #ddf4ff;
+  --green: #1a7f37; --green-bg: #dafbe1;
+  --orange: #9a6700; --orange-bg: #fff8c5;
+  --red: #cf222e; --red-bg: #ffebe9;
+  --purple: #8250df; --purple-bg: #fbefff;
+}
+[data-theme="dark"] {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --border2: #484f58;
+  --text: #e6edf3; --muted: #8b949e; --subtle: #6e7681;
+  --accent: #58a6ff; --accent-bg: #121d2f;
+  --green: #3fb950; --green-bg: #0f2a17;
+  --orange: #d29922; --orange-bg: #271f00;
+  --red: #f85149; --red-bg: #2d0000;
+  --purple: #bc8cff; --purple-bg: #1a0e2e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    "Noto Sans SC", "PingFang SC", sans-serif;
+  font-size: 14px; line-height: 1.6;
+  background: var(--bg); color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.2s, color 0.2s;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* Top bar */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.topbar-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.topbar-title { font-weight: 600; font-size: 15px; }
+.topbar-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.theme-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 12px; cursor: pointer;
+  font-size: 13px; color: var(--text); white-space: nowrap;
+}
+.theme-btn:hover { background: var(--border); }
+
+/* Stats row */
+.stats-row {
+  display: flex; gap: 24px; padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.stat-item { display: flex; flex-direction: column; }
+.stat-num { font-size: 22px; font-weight: 700; color: var(--text); }
+.stat-label { font-size: 12px; color: var(--muted); }
+
+/* Filter bar */
+.filter-bar {
+  display: flex; align-items: center; gap: 8px; padding: 14px 0;
+  flex-wrap: wrap;
+}
+.search-box {
+  flex: 1; min-width: 200px; max-width: 320px;
+  padding: 6px 10px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--surface);
+  color: var(--text); font-size: 13px;
+}
+.search-box:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+.pill-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.pill {
+  padding: 5px 12px; border: 1px solid var(--border);
+  border-radius: 20px; cursor: pointer; font-size: 12px;
+  background: var(--surface); color: var(--muted);
+  transition: all 0.15s;
+}
+.pill:hover { border-color: var(--border2); color: var(--text); }
+.pill.active {
+  background: var(--accent); border-color: var(--accent);
+  color: #fff;
+}
+
+/* Season banner */
+.season-banner {
+  background: var(--orange-bg); border: 1px solid var(--orange);
+  border-radius: 6px; padding: 10px 14px;
+  margin: 12px 0; font-size: 13px; color: var(--orange);
+}
+
+/* Company grid */
+.company-grid {
+  display: grid; gap: 20px; padding: 24px 0;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+}
+.company-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex; flex-direction: column; gap: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+}
+.company-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+  text-decoration: none;
+}
+.company-card:active { transform: translateY(0); }
+.card-header { display: flex; align-items: center; gap: 12px; }
+.co-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  object-fit: contain; flex-shrink: 0;
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 4px;
+}
+.co-logo-fallback {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--surface2), var(--surface));
+  border: 1px solid var(--border);
+  display: none; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0;
+}
+.card-title { font-weight: 700; font-size: 15px; color: var(--text); letter-spacing: -0.01em; }
+.card-subtitle { font-size: 12px; color: var(--subtle); margin-top: 1px; }
+.detail-status { font-size: 12px; font-weight: 500; }
+.status-dot { display: inline-flex; align-items: center; gap: 6px; }
+.status-dot::before {
+  content: ""; display: inline-block;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor; flex-shrink: 0;
+}
+.status-open { color: var(--green); }
+.status-soon { color: var(--orange); }
+.status-closed { color: var(--red); }
+.status-rolling { color: var(--purple); }
+.status-unknown { color: var(--subtle); }
+.card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag {
+  padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500;
+  background: var(--surface2); color: var(--muted);
+  letter-spacing: 0.01em;
+}
+.tag-ai { background: var(--accent-bg); color: var(--accent); }
+.card-desc {
+  font-size: 13px; color: var(--muted); line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-positions { font-size: 12px; color: var(--text); }
+.pos-item {
+  padding: 4px 0; border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+.pos-item:last-child { border-bottom: none; }
+.card-footer {
+  display: flex; align-items: baseline; gap: 16px;
+  margin-top: auto; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.salary-base { font-size: 13px; color: var(--muted); font-weight: 500; }
+.salary-base span { color: var(--text); font-weight: 700; }
+.salary-annual { font-size: 14px; font-weight: 700; color: var(--green); letter-spacing: -0.02em; }
+
+/* Detail page */
+.detail-header {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+}
+.detail-header-inner { display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.detail-logo { width: 48px; height: 48px; border-radius: 8px; object-fit: contain; }
+.detail-logo-fallback {
+  width: 48px; height: 48px; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: none; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: var(--muted);
+}
+.detail-title { font-size: 22px; font-weight: 700; }
+.detail-en { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.detail-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.detail-status { font-size: 13px; margin-top: 6px; }
+.detail-body { padding: 24px 0; display: flex; flex-direction: column; gap: 28px; }
+.section { }
+.section-title {
+  font-size: 15px; font-weight: 600; margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.desc-text { font-size: 14px; color: var(--text); line-height: 1.7; }
+table.info-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+table.info-table th {
+  background: var(--surface); font-weight: 600; text-align: left;
+  padding: 8px 10px; border: 1px solid var(--border); color: var(--muted);
+}
+table.info-table td {
+  padding: 8px 10px; border: 1px solid var(--border); vertical-align: top;
+}
+table.info-table tr:nth-child(even) td { background: var(--surface); }
+.kv-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.kv-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 12px;
+}
+.kv-key { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.kv-val { font-size: 16px; font-weight: 600; color: var(--text); margin-top: 4px; }
+.kv-val.highlight { color: var(--green); }
+ol.steps { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+ol.steps li { font-size: 13px; line-height: 1.6; }
+ul.bullets { padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+ul.bullets li { font-size: 13px; line-height: 1.6; }
+.channels-list { display: flex; flex-direction: column; gap: 6px; }
+.channel-item { font-size: 13px; }
+.note-box {
+  background: var(--orange-bg); border: 1px solid var(--orange);
+  border-radius: 6px; padding: 12px 16px; font-size: 13px;
+  color: var(--orange); line-height: 1.6;
+}
+.back-link {
+  display: inline-block; margin-bottom: 12px;
+  font-size: 13px; color: var(--muted);
+}
+.back-link:hover { color: var(--text); }
+.footer {
+  border-top: 1px solid var(--border); padding: 20px 0;
+  color: var(--muted); font-size: 12px; text-align: center; margin-top: 32px;
+}
+
+/* Sources section */
+.sources-list { display: flex; flex-direction: column; gap: 8px; }
+.source-item {
+  display: flex; align-items: baseline; gap: 10px;
+  font-size: 13px; flex-wrap: wrap;
+}
+.source-label {
+  flex-shrink: 0; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--muted); min-width: 72px; text-align: center;
+}
+.source-url { color: var(--accent); font-size: 12px; }
+.source-desc { color: var(--muted); font-size: 12px; }
+.sources-note {
+  margin-top: 10px; padding: 8px 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; font-size: 12px; color: var(--muted);
+}
+
+/* Tech Stack */
+.tech-section { display: flex; flex-direction: column; gap: 10px; }
+.tech-row { display: flex; align-items: flex-start; gap: 8px; }
+.tech-row-label { font-size: 11px; color: var(--muted); font-weight: 600;
+  min-width: 52px; padding-top: 3px; flex-shrink: 0; }
+.tech-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tech-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px;
+  background: var(--accent-bg); color: var(--accent);
+  border: 1px solid var(--border); font-weight: 500; }
+.tech-tag.lang { background: rgba(139,92,246,.12); color: #8b5cf6;
+  border-color: rgba(139,92,246,.2); }
+.tech-tag.framework { background: var(--accent-bg); color: var(--accent); }
+.tech-tag.infra { background: rgba(16,185,129,.12); color: #10b981;
+  border-color: rgba(16,185,129,.2); }
+/* Benefits */
+.benefits-grid { display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.benefit-item { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 12px; }
+.benefit-key { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
+.benefit-val { font-size: 13px; color: var(--text); }
+/* Competition */
+.comp-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.comp-stars { font-size: 18px; letter-spacing: 2px; }
+.comp-badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+.comp-badge.lvl-5 { background: rgba(239,68,68,.12); color: #ef4444;
+  border: 1px solid rgba(239,68,68,.25); }
+.comp-badge.lvl-4 { background: rgba(245,158,11,.12); color: #f59e0b;
+  border: 1px solid rgba(245,158,11,.25); }
+.comp-badge.lvl-3 { background: rgba(59,130,246,.12); color: #3b82f6;
+  border: 1px solid rgba(59,130,246,.25); }
+.comp-badge.lvl-2 { background: rgba(16,185,129,.12); color: #10b981;
+  border: 1px solid rgba(16,185,129,.25); }
+.comp-stats { font-size: 12px; color: var(--muted); }
+.comp-note-text { font-size: 12px; color: var(--muted); margin-top: 6px; }
+/* Recent News */
+.news-list { display: flex; flex-direction: column; }
+.news-item { display: flex; gap: 12px; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid var(--border); }
+.news-item:last-child { border-bottom: none; }
+.news-date { flex-shrink: 0; font-size: 11px; color: var(--muted);
+  font-weight: 600; min-width: 58px; padding-top: 2px; }
+.news-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+.news-text a { color: var(--accent); text-decoration: none; }
+.news-text a:hover { text-decoration: underline; }
+
+/* hidden card */
+.company-card.hidden { display: none; }
+
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="container">
+    <div class="topbar-inner">
+      <div>
+        <div class="topbar-title">2026 互联网秋招</div>
+        <div class="topbar-sub">数据截至 2026-05-24 10:23</div>
+      </div>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">Dark Mode</button>
+    </div>
+  </div>
+</div>
+<div class="detail-header">
+  <div class="container">
+    <a class="back-link" href="../index.html">← 返回总览</a>
+    <div class="detail-header-inner">
+      <img class="detail-logo" src="https://www.google.com/s2/favicons?domain=minimaxi.com&sz=64" alt="MiniMax" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="detail-logo-fallback">Mi</span>
+      <div>
+        <div class="detail-title">MiniMax</div>
+        <div class="detail-en">MiniMax</div>
+        <div class="detail-cats"><span class="tag">AI/大模型</span><span class="tag">多模态</span></div>
+        <div class="detail-status"><span class="status-dot status-rolling">全年滚动</span> &nbsp; 参考招聘规模：100 人/年内</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="detail-body">
+    <div class="section">
+      <div class="section-title">公司概况</div>
+      <div class="desc-text">MiniMax 是国内顶尖的多模态 AI 独角兽，海螺 AI（Hailuo）是其代表性多模态产品，具备文生图、文生视频、语音合成等能力。MiniMax 技术团队背景强劲，在多模态理解和生成方向持续创新，是 AIGC 赛道的重要玩家。</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">招募批次</div>
+      <table class="info-table">
+        <thead><tr><th>批次</th><th>开放时间</th><th>截止时间</th><th>说明</th></tr></thead>
+        <tbody><tr>
+<td>全年开放</td><td>全年</td><td>按需</td><td>小规模精英招募</td>
+</tr></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">重点招募职位</div>
+      <table class="info-table">
+        <thead><tr><th>职位名称</th><th>所属团队</th><th>核心要求</th></tr></thead>
+        <tbody><tr><td>多模态大模型研究员</td><td>海螺 AI 核心</td><td>图文视频统一建模；DiT/Diffusion 研究；多模态对齐</td></tr><tr><td>语音合成工程师</td><td>TTS</td><td>TTS 端到端模型；情感语音合成；低延迟推理</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">薪资参考（硕士应届）</div>
+      <div class="kv-grid"><div class="kv-item"><div class="kv-key">月薪 Base</div><div class="kv-val class="highlight"">22–32K</div></div><div class="kv-item"><div class="kv-key">年总包</div><div class="kv-val class="highlight"">26–38 万</div></div><div class="kv-item"><div class="kv-key">股票/期权</div><div class="kv-val">早期期权，大额比例</div></div><div class="kv-item"><div class="kv-key">备注</div><div class="kv-val">创业公司，期权激励为主要长期激励</div></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">面试流程</div>
+      <ol class="steps"><li>1. 简历筛选（多模态/AIGC 背景优先）</li>
+<li>2. 技术面 2 轮</li>
+<li>3. 主管面</li>
+<li>4. HR 面</li></ol>
+    </div>
+
+    <div class="section">
+      <div class="section-title">面试真题 &amp; 经验</div>
+      <ul class="bullets"><li>一面音视频 AI 岗：Stable Diffusion 采样调度（DDPM/DDIM/DPM-Solver）原理</li>
+<li>语音方向：Codec LM 的离散化方法（EnCodec residual VQ）</li>
+<li>高频：Classifier-Free Guidance 推导，cfg_scale 对多样性-质量的影响</li>
+<li>编程题：实现 FP16 混合精度训练的 gradient scaling 逻辑</li>
+<li>MiniMax 团队规模小，面试官可能是直属 leader，表达清晰度影响印象分</li></ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">投递渠道</div>
+      <div class="channels-list"><div class="channel-item"><a href="https://www.minimaxi.com/careers" target="_blank">官网</a></div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">投递策略</div>
+      <ul class="bullets"><li>突出多模态生成和理解方向的项目经验</li>
+<li>海螺 AI 视频生成岗位竞争激烈，建议有实际生成模型经验</li></ul>
+    </div>
+
+    <div class="section">
+      <div class="section-title">公司亮点</div>
+      <ul class="bullets"><li>海螺 AI：文生视频/多模态产品，用户规模增长快</li>
+<li>顶尖多模态技术团队，论文质量高</li>
+<li>估值持续上涨，早期期权含金量高</li></ul>
+    </div>
+
+    <div class="section"><div class="section-title">技术栈</div><div class="tech-section"><div class="tech-row"><div class="tech-row-label">语言</div><div class="tech-tags"><span class="tech-tag lang">Python</span><span class="tech-tag lang">C++</span><span class="tech-tag lang">CUDA</span></div></div><div class="tech-row"><div class="tech-row-label">框架</div><div class="tech-tags"><span class="tech-tag framework">PyTorch</span><span class="tech-tag framework">自研视频生成框架</span><span class="tech-tag framework">vLLM</span></div></div><div class="tech-row"><div class="tech-row-label">基础设施</div><div class="tech-tags"><span class="tech-tag infra">GPU 集群</span><span class="tech-tag infra">对象存储</span><span class="tech-tag infra">Kubernetes</span></div></div></div></div>
+    <div class="section"><div class="section-title">福利待遇</div><div class="benefits-grid"><div class="benefit-item"><div class="benefit-key">薪资发放</div><div class="benefit-val">高 Base</div></div><div class="benefit-item"><div class="benefit-key">年终奖</div><div class="benefit-val">视业务发展</div></div><div class="benefit-item"><div class="benefit-key">股票</div><div class="benefit-val">期权</div></div><div class="benefit-item"><div class="benefit-key">工作制度</div><div class="benefit-val">弹性（强度较高）</div></div><div class="benefit-item"><div class="benefit-key">工作地点</div><div class="benefit-val">上海</div></div><div class="benefit-item"><div class="benefit-key">其他福利</div><div class="benefit-val">商业保险、免费餐</div></div></div></div>
+    <div class="section"><div class="section-title">招聘竞争度</div><div class="comp-row"><span class="comp-stars">★★★☆☆</span><span class="comp-badge lvl-3">中等</span><span class="comp-stats">多模态/视频生成岗竞争中等</span></div><div class="comp-note-text">海螺 AI 视频生成是核心产品线；音频、视觉多模态方向扩招中</div></div>
+    <div class="section"><div class="section-title">公司近况</div><div class="news-list"><div class="news-item"><div class="news-date">2025-02</div><div class="news-text"><a href="https://36kr.com/p/3364424165082883" target="_blank">海螺 AI 视频生成功能正式上线，免费开放给 C 端用户</a></div></div><div class="news-item"><div class="news-date">2025-01</div><div class="news-text"><a href="https://36kr.com/p/3364424165082883" target="_blank">MiniMax-Text-01 发布，支持 100 万 token 上下文，刷新长文本记录</a></div></div></div></div>
+    <div class="section"><div class="section-title">注意事项</div><div class="note-box">MiniMax 规模小，对人才要求极高；确认具体岗位需求后再投递。</div></div>
+    <div class="section">
+  <div class="section-title">参考来源</div>
+  <div class="sources-list"><div class="source-item"><span class="source-label">官方校招</span><a class="source-url" href="https://www.minimaxi.com/careers" target="_blank">www.minimaxi.com</a><span class="source-desc">— 职位信息 / 批次时间 / 投递入口</span></div><div class="source-item"><span class="source-label">牛客面经</span><a class="source-url" href="https://www.nowcoder.com/discuss/625779241275109376" target="_blank">www.nowcoder.com</a><span class="source-desc">— MiniMax AI产品经理秋招面经记录</span></div><div class="source-item"><span class="source-label">薪资参考</span><a class="source-url" href="https://www.nowcoder.com/discuss/777527362723377152" target="_blank">www.nowcoder.com</a><span class="source-desc">— MiniMax内推薪资福利讨论（牛客网）</span></div></div>
+  <div class="sources-note">数据截至 2026-05  ·  批次时间为历史参考  ·  薪资数据来源网络汇总，以官方 Offer 为准</div>
+</div>
+  </div>
+</div>
+<div class="footer">
+  <div class="container">
+    数据仅供参考，请以官方渠道为准 · <a href="https://www.minimaxi.com/careers" target="_blank">官网投递</a> · 生成时间：2026-05-24 10:23
+  </div>
+</div>
+
+<script>
+function toggleTheme() {
+  var cur = document.documentElement.getAttribute('data-theme');
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('theme-btn').textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var cur = document.documentElement.getAttribute('data-theme');
+  var btn = document.getElementById('theme-btn');
+  if (btn) btn.textContent = cur === 'dark' ? 'Light Mode' : 'Dark Mode';
+});
+</script>
+
+</body>
+</html>

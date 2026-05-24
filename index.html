@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 秋招信息汇总</title>
+<script>
+(function(){
+  var t = localStorage.getItem('theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.setAttribute('data-theme', t);
+})();
+</script>
+<style>
+
+:root { color-scheme: light dark; }
+[data-theme="light"] {
+  --bg: #ffffff; --surface: #f6f8fa; --surface2: #eaeef2;
+  --border: #d0d7de; --border2: #afb8c1;
+  --text: #24292f; --muted: #57606a; --subtle: #8c959f;
+  --accent: #0969da; --accent-bg: #ddf4ff;
+  --green: #1a7f37; --green-bg: #dafbe1;
+  --orange: #9a6700; --orange-bg: #fff8c5;
+  --red: #cf222e; --red-bg: #ffebe9;
+  --purple: #8250df; --purple-bg: #fbefff;
+}
+[data-theme="dark"] {
+  --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+  --border: #30363d; --border2: #484f58;
+  --text: #e6edf3; --muted: #8b949e; --subtle: #6e7681;
+  --accent: #58a6ff; --accent-bg: #121d2f;
+  --green: #3fb950; --green-bg: #0f2a17;
+  --orange: #d29922; --orange-bg: #271f00;
+  --red: #f85149; --red-bg: #2d0000;
+  --purple: #bc8cff; --purple-bg: #1a0e2e;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    "Noto Sans SC", "PingFang SC", sans-serif;
+  font-size: 14px; line-height: 1.6;
+  background: var(--bg); color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.2s, color 0.2s;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* Top bar */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+}
+.topbar-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.topbar-title { font-weight: 600; font-size: 15px; }
+.topbar-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.theme-btn {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 6px 12px; cursor: pointer;
+  font-size: 13px; color: var(--text); white-space: nowrap;
+}
+.theme-btn:hover { background: var(--border); }
+
+/* Stats row */
+.stats-row {
+  display: flex; gap: 24px; padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.stat-item { display: flex; flex-direction: column; }
+.stat-num { font-size: 22px; font-weight: 700; color: var(--text); }
+.stat-label { font-size: 12px; color: var(--muted); }
+
+/* Filter bar */
+.filter-bar {
+  display: flex; align-items: center; gap: 8px; padding: 14px 0;
+  flex-wrap: wrap;
+}
+.search-box {
+  flex: 1; min-width: 200px; max-width: 320px;
+  padding: 6px 10px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--surface);
+  color: var(--text); font-size: 13px;
+}
+.search-box:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+.pill-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.pill {
+  padding: 5px 12px; border: 1px solid var(--border);
+  border-radius: 20px; cursor: pointer; font-size: 12px;
+  background: var(--surface); color: var(--muted);
+  transition: all 0.15s;
+}
+.pill:hover { border-color: var(--border2); color: var(--text); }
+.pill.active {
+  background: var(--accent); border-color: var(--accent);
+  color: #fff;
+}
+
+/* Season banner */
+.season-banner {
+  background: var(--orange-bg); border: 1px solid var(--orange);
+  border-radius: 6px; padding: 10px 14px;
+  margin: 12px 0; font-size: 13px; color: var(--orange);
+}
+
+/* Company grid */
+.company-grid {
+  display: grid; gap: 20px; padding: 24px 0;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+}
+.company-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex; flex-direction: column; gap: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+}
+.company-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08), 0 4px 10px rgba(0,0,0,0.04);
+  text-decoration: none;
+}
+.company-card:active { transform: translateY(0); }
+.card-header { display: flex; align-items: center; gap: 12px; }
+.co-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  object-fit: contain; flex-shrink: 0;
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 4px;
+}
+.co-logo-fallback {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--surface2), var(--surface));
+  border: 1px solid var(--border);
+  display: none; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--muted); flex-shrink: 0;
+}
+.card-title { font-weight: 700; font-size: 15px; color: var(--text); letter-spacing: -0.01em; }
+.card-subtitle { font-size: 12px; color: var(--subtle); margin-top: 1px; }
+.detail-status { font-size: 12px; font-weight: 500; }
+.status-dot { display: inline-flex; align-items: center; gap: 6px; }
+.status-dot::before {
+  content: ""; display: inline-block;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: currentColor; flex-shrink: 0;
+}
+.status-open { color: var(--green); }
+.status-soon { color: var(--orange); }
+.status-closed { color: var(--red); }
+.status-rolling { color: var(--purple); }
+.status-unknown { color: var(--subtle); }
+.card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.tag {
+  padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500;
+  background: var(--surface2); color: var(--muted);
+  letter-spacing: 0.01em;
+}
+.tag-ai { background: var(--accent-bg); color: var(--accent); }
+.card-desc {
+  font-size: 13px; color: var(--muted); line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-positions { font-size: 12px; color: var(--text); }
+.pos-item {
+  padding: 4px 0; border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+.pos-item:last-child { border-bottom: none; }
+.card-footer {
+  display: flex; align-items: baseline; gap: 16px;
+  margin-top: auto; padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.salary-base { font-size: 13px; color: var(--muted); font-weight: 500; }
+.salary-base span { color: var(--text); font-weight: 700; }
+.salary-annual { font-size: 14px; font-weight: 700; color: var(--green); letter-spacing: -0.02em; }
+
+/* Detail page */
+.detail-header {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+}
+.detail-header-inner { display: flex; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.detail-logo { width: 48px; height: 48px; border-radius: 8px; object-fit: contain; }
+.detail-logo-fallback {
+  width: 48px; height: 48px; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: none; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; color: var(--muted);
+}
+.detail-title { font-size: 22px; font-weight: 700; }
+.detail-en { font-size: 14px; color: var(--muted); margin-top: 2px; }
+.detail-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.detail-status { font-size: 13px; margin-top: 6px; }
+.detail-body { padding: 24px 0; display: flex; flex-direction: column; gap: 28px; }
+.section { }
+.section-title {
+  font-size: 15px; font-weight: 600; margin-bottom: 12px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.desc-text { font-size: 14px; color: var(--text); line-height: 1.7; }
+table.info-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+table.info-table th {
+  background: var(--surface); font-weight: 600; text-align: left;
+  padding: 8px 10px; border: 1px solid var(--border); color: var(--muted);
+}
+table.info-table td {
+  padding: 8px 10px; border: 1px solid var(--border); vertical-align: top;
+}
+table.info-table tr:nth-child(even) td { background: var(--surface); }
+.kv-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.kv-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 12px;
+}
+.kv-key { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.kv-val { font-size: 16px; font-weight: 600; color: var(--text); margin-top: 4px; }
+.kv-val.highlight { color: var(--green); }
+ol.steps { padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+ol.steps li { font-size: 13px; line-height: 1.6; }
+ul.bullets { padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+ul.bullets li { font-size: 13px; line-height: 1.6; }
+.channels-list { display: flex; flex-direction: column; gap: 6px; }
+.channel-item { font-size: 13px; }
+.note-box {
+  background: var(--orange-bg); border: 1px solid var(--orange);
+  border-radius: 6px; padding: 12px 16px; font-size: 13px;
+  color: var(--orange); line-height: 1.6;
+}
+.back-link {
+  display: inline-block; margin-bottom: 12px;
+  font-size: 13px; color: var(--muted);
+}
+.back-link:hover { color: var(--text); }
+.footer {
+  border-top: 1px solid var(--border); padding: 20px 0;
+  color: var(--muted); font-size: 12px; text-align: center; margin-top: 32px;
+}
+
+/* Sources section */
+.sources-list { display: flex; flex-direction: column; gap: 8px; }
+.source-item {
+  display: flex; align-items: baseline; gap: 10px;
+  font-size: 13px; flex-wrap: wrap;
+}
+.source-label {
+  flex-shrink: 0; padding: 2px 8px; border-radius: 4px;
+  font-size: 11px; font-weight: 600;
+  background: var(--surface2); border: 1px solid var(--border);
+  color: var(--muted); min-width: 72px; text-align: center;
+}
+.source-url { color: var(--accent); font-size: 12px; }
+.source-desc { color: var(--muted); font-size: 12px; }
+.sources-note {
+  margin-top: 10px; padding: 8px 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; font-size: 12px; color: var(--muted);
+}
+
+/* Tech Stack */
+.tech-section { display: flex; flex-direction: column; gap: 10px; }
+.tech-row { display: flex; align-items: flex-start; gap: 8px; }
+.tech-row-label { font-size: 11px; color: var(--muted); font-weight: 600;
+  min-width: 52px; padding-top: 3px; flex-shrink: 0; }
+.tech-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tech-tag { padding: 2px 8px; border-radius: 4px; font-size: 11px;
+  background: var(--accent-bg); color: var(--accent);
+  border: 1px solid var(--border); font-weight: 500; }
+.tech-tag.lang { background: rgba(139,92,246,.12); color: #8b5cf6;
+  border-color: rgba(139,92,246,.2); }
+.tech-tag.framework { background: var(--accent-bg); color: var(--accent); }
+.tech-tag.infra { background: rgba(16,185,129,.12); color: #10b981;
+  border-color: rgba(16,185,129,.2); }
+/* Benefits */
+.benefits-grid { display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+.benefit-item { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 12px; }
+.benefit-key { font-size: 11px; color: var(--muted); font-weight: 600; margin-bottom: 3px; }
+.benefit-val { font-size: 13px; color: var(--text); }
+/* Competition */
+.comp-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.comp-stars { font-size: 18px; letter-spacing: 2px; }
+.comp-badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+.comp-badge.lvl-5 { background: rgba(239,68,68,.12); color: #ef4444;
+  border: 1px solid rgba(239,68,68,.25); }
+.comp-badge.lvl-4 { background: rgba(245,158,11,.12); color: #f59e0b;
+  border: 1px solid rgba(245,158,11,.25); }
+.comp-badge.lvl-3 { background: rgba(59,130,246,.12); color: #3b82f6;
+  border: 1px solid rgba(59,130,246,.25); }
+.comp-badge.lvl-2 { background: rgba(16,185,129,.12); color: #10b981;
+  border: 1px solid rgba(16,185,129,.25); }
+.comp-stats { font-size: 12px; color: var(--muted); }
+.comp-note-text { font-size: 12px; color: var(--muted); margin-top: 6px; }
+/* Recent News */
+.news-list { display: flex; flex-direction: column; }
+.news-item { display: flex; gap: 12px; align-items: flex-start;
+  padding: 8px 0; border-bottom: 1px solid var(--border); }
+.news-item:last-child { border-bottom: none; }
+.news-date { flex-shrink: 0; font-size: 11px; color: var(--muted);
+  font-weight: 600; min-width: 58px; padding-top: 2px; }
+.news-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+.news-text a { color: var(--accent); text-decoration: none; }
+.news-text a:hover { text-decoration: underline; }
+
+/* hidden card */
+.company-card.hidden { display: none; }
+
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="container">
+    <div class="topbar-inner">
+      <div>
+        <div class="topbar-title">2026 互联网秋招信息汇总</div>
+        <div class="topbar-sub">AI / 大模型 / 算法 / 数据方向 · 数据截至 2026-05-24 10:23</div>
+      </div>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">Dark Mode</button>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="stats-row">
+    <div class="stat-item"><span class="stat-num">35</span><span class="stat-label">家公司</span></div>
+    <div class="stat-item"><span class="stat-num">29</span><span class="stat-label">即将/已开放</span></div>
+    <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">全年滚动</span></div>
+    <div class="stat-item"><span class="stat-num">AI/大模型</span><span class="stat-label">核心岗位方向</span></div>
+  </div>
+  <div class="season-banner">
+    注意：当前为 2026 年 5 月，2026 届秋招尚未正式开放。以下批次时间为 2025 届历史参考数据，仅供预判规划。正式日期请以各公司官网通知为准。
+  </div>
+  <div class="filter-bar">
+    <input class="search-box" id="search" type="text" placeholder="搜索公司名、职位或方向...">
+    <div class="pill-group"><span class="pill active" data-cat="all">全部</span><span class="pill" data-cat="AGI">AGI</span><span class="pill" data-cat="AI/云">AI/云</span><span class="pill" data-cat="AI/大模型">AI/大模型</span><span class="pill" data-cat="MLOps">MLOps</span><span class="pill" data-cat="云计算">云计算</span><span class="pill" data-cat="互联网">互联网</span><span class="pill" data-cat="企业AI">企业AI</span><span class="pill" data-cat="出行">出行</span><span class="pill" data-cat="医疗 AI">医疗 AI</span><span class="pill" data-cat="外卖">外卖</span><span class="pill" data-cat="多模态">多模态</span><span class="pill" data-cat="安全">安全</span><span class="pill" data-cat="安防 AI">安防 AI</span><span class="pill" data-cat="嵌入式">嵌入式</span><span class="pill" data-cat="嵌入式AI">嵌入式AI</span><span class="pill" data-cat="手机/IoT">手机/IoT</span><span class="pill" data-cat="支付">支付</span><span class="pill" data-cat="教育">教育</span><span class="pill" data-cat="教育 AI">教育 AI</span><span class="pill" data-cat="旅游出行">旅游出行</span><span class="pill" data-cat="无人机">无人机</span><span class="pill" data-cat="智能汽车">智能汽车</span><span class="pill" data-cat="机器人">机器人</span><span class="pill" data-cat="浏览器">浏览器</span><span class="pill" data-cat="消费电子">消费电子</span><span class="pill" data-cat="游戏">游戏</span><span class="pill" data-cat="物流">物流</span><span class="pill" data-cat="物流机器人">物流机器人</span><span class="pill" data-cat="生活服务">生活服务</span><span class="pill" data-cat="电商">电商</span><span class="pill" data-cat="直播">直播</span><span class="pill" data-cat="短视频">短视频</span><span class="pill" data-cat="硬科技">硬科技</span><span class="pill" data-cat="社交">社交</span><span class="pill" data-cat="社交媒体">社交媒体</span><span class="pill" data-cat="社区电商">社区电商</span><span class="pill" data-cat="端侧 AI">端侧 AI</span><span class="pill" data-cat="自动驾驶">自动驾驶</span><span class="pill" data-cat="芯片">芯片</span><span class="pill" data-cat="视频平台">视频平台</span><span class="pill" data-cat="计算机视觉">计算机视觉</span><span class="pill" data-cat="语音识别">语音识别</span><span class="pill" data-cat="跨境电商">跨境电商</span><span class="pill" data-cat="通信">通信</span><span class="pill" data-cat="量化">量化</span><span class="pill" data-cat="金融科技">金融科技</span></div>
+  </div>
+  <div class="company-grid">
+
+<a class="company-card" href="companies/bytedance.html"
+   data-cats="互联网|AI/大模型|短视频" data-search="字节跳动 ByteDance 互联网 AI/大模型 短视频 算法工程师 - 推荐与广告 NLP / 大模型工程师 多模态算法研究员 数据工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=bytedance.com&sz=64" alt="字节跳动" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">字节</span>
+    <div>
+      <div class="card-title">字节跳动</div>
+      <div class="card-subtitle">ByteDance</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">互联网</span><span class="tag  tag-ai">AI/大模型</span><span class="tag">短视频</span></div>
+  <div class="card-desc">字节跳动是全球最大的内容平台公司之一，旗下拥有抖音、TikTok、今日头条、飞书、豆包等产品。公司在 NLP、推荐系统、多模态 AI 等方向拥有国际顶尖的研究与工程团队。2024 年推出 Doubao...</div>
+  <div class="card-positions"><div class="pos-item">算法工程师 - 推荐与广告</div><div class="pos-item">NLP / 大模型工程师</div><div class="pos-item">多模态算法研究员</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>30–35K</span></span>
+    <span class="salary-annual">36–42 万（不含股票）</span>
+  </div>
+</a>
+<a class="company-card" href="companies/alibaba.html"
+   data-cats="互联网|电商|云计算|AI/大模型" data-search="阿里巴巴 Alibaba Group 互联网 电商 云计算 AI/大模型 算法工程师 - 搜索推荐 大模型工程师 数据科学家 机器学习工程师 - 风控">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=alibaba.com&sz=64" alt="阿里巴巴" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">阿里</span>
+    <div>
+      <div class="card-title">阿里巴巴</div>
+      <div class="card-subtitle">Alibaba Group</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">互联网</span><span class="tag">电商</span><span class="tag">云计算</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">阿里巴巴集团旗下包含淘天集团、阿里云、蚂蚁集团、菜鸟、饿了么等多个独立业务单元。2023 年推出通义千问（Qwen）系列大模型，并在阿里云上全面落地。AI 应用遍及搜索推荐、客服、内容生成等核心业务线...</div>
+  <div class="card-positions"><div class="pos-item">算法工程师 - 搜索推荐</div><div class="pos-item">大模型工程师</div><div class="pos-item">数据科学家</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>25–35K</span></span>
+    <span class="salary-annual">30–42 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/tencent.html"
+   data-cats="互联网|游戏|社交|AI/大模型" data-search="腾讯 Tencent 互联网 游戏 社交 AI/大模型 NLP 算法工程师 推荐系统工程师 游戏 AI 工程师 数据工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=tencent.com&sz=64" alt="腾讯" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">腾讯</span>
+    <div>
+      <div class="card-title">腾讯</div>
+      <div class="card-subtitle">Tencent</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">互联网</span><span class="tag">游戏</span><span class="tag">社交</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">腾讯是中国最大的互联网企业之一，旗下微信、QQ 用户规模庞大。混元大模型（Hunyuan）作为腾讯自研基座模型，广泛应用于广告、游戏 NPC、内容生成等业务。腾讯云、CSIG 事业群在 AI 工程化落...</div>
+  <div class="card-positions"><div class="pos-item">NLP 算法工程师</div><div class="pos-item">推荐系统工程师</div><div class="pos-item">游戏 AI 工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>24–30K</span></span>
+    <span class="salary-annual">28–36 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/baidu.html"
+   data-cats="互联网|AI/大模型|自动驾驶" data-search="百度 Baidu 互联网 AI/大模型 自动驾驶 大模型预训练工程师 自动驾驶算法工程师 搜索算法工程师 AI 基础架构工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=baidu.com&sz=64" alt="百度" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">百度</span>
+    <div>
+      <div class="card-title">百度</div>
+      <div class="card-subtitle">Baidu</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">互联网</span><span class="tag  tag-ai">AI/大模型</span><span class="tag">自动驾驶</span></div>
+  <div class="card-desc">百度是中国最大的搜索引擎公司，也是国内最早押注 AI 的互联网企业。文心一言（ERNIE Bot）是国内首批商用大模型产品，文心 4.0 在理解和生成能力上具竞争力。Apollo 自动驾驶平台是国内最...</div>
+  <div class="card-positions"><div class="pos-item">大模型预训练工程师</div><div class="pos-item">自动驾驶算法工程师</div><div class="pos-item">搜索算法工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>25–32K</span></span>
+    <span class="salary-annual">30–38 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/huawei.html"
+   data-cats="通信|消费电子|AI/云|芯片" data-search="华为 Huawei 通信 消费电子 AI/云 芯片 AI 算法工程师 大数据工程师 嵌入式 AI 工程师 编译器工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=huawei.com&sz=64" alt="华为" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">华为</span>
+    <div>
+      <div class="card-title">华为</div>
+      <div class="card-subtitle">Huawei</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">通信</span><span class="tag">消费电子</span><span class="tag  tag-ai">AI/云</span><span class="tag">芯片</span></div>
+  <div class="card-desc">华为是全球领先的 ICT 基础设施和智能终端提供商。盘古大模型作为华为自研 AI 基座，服务于运营商、政企等 ToB 场景。昇腾 NPU 芯片构建国产 AI 算力基础设施，在国内 AI 训练市场占有重...</div>
+  <div class="card-positions"><div class="pos-item">AI 算法工程师</div><div class="pos-item">大数据工程师</div><div class="pos-item">嵌入式 AI 工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–28K（硕士）</span></span>
+    <span class="salary-annual">26–34 万（含年终）</span>
+  </div>
+</a>
+<a class="company-card" href="companies/jd.html"
+   data-cats="电商|物流|AI/大模型" data-search="京东 JD.com 电商 物流 AI/大模型 推荐算法工程师 NLP 工程师 计算机视觉工程师 数据工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=jd.com&sz=64" alt="京东" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">京东</span>
+    <div>
+      <div class="card-title">京东</div>
+      <div class="card-subtitle">JD.com</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">电商</span><span class="tag">物流</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">京东是中国最大的自营电商平台，在供应链、物流智能化方向投入大量 AI 技术。言犀大模型专注于电商场景，涵盖商品理解、智能客服、营销文案生成等核心业务场景。京东物流智能仓储机器人规模全球领先。...</div>
+  <div class="card-positions"><div class="pos-item">推荐算法工程师</div><div class="pos-item">NLP 工程师</div><div class="pos-item">计算机视觉工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–28K</span></span>
+    <span class="salary-annual">26–34 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/meituan.html"
+   data-cats="生活服务|外卖|AI/大模型" data-search="美团 Meituan 生活服务 外卖 AI/大模型 算法工程师 - 搜索/推荐 强化学习工程师 NLP/LLM 工程师 大数据工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=meituan.com&sz=64" alt="美团" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">美团</span>
+    <div>
+      <div class="card-title">美团</div>
+      <div class="card-subtitle">Meituan</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">生活服务</span><span class="tag">外卖</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">美团是中国最大的生活服务平台，外卖、到店、酒旅三大业务线市场份额领先。美团在配送路径优化、需求预测、商家智能运营等方向大量应用 AI 技术。近期发布天工大模型，专注本地生活服务场景的 AI 智能化。...</div>
+  <div class="card-positions"><div class="pos-item">算法工程师 - 搜索/推荐</div><div class="pos-item">强化学习工程师</div><div class="pos-item">NLP/LLM 工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>25–30K</span></span>
+    <span class="salary-annual">30–36 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/kuaishou.html"
+   data-cats="短视频|直播|AI/大模型" data-search="快手 Kuaishou 短视频 直播 AI/大模型 视频生成算法工程师 推荐算法工程师 多模态大模型工程师 数据挖掘工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=kuaishou.com&sz=64" alt="快手" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">快手</span>
+    <div>
+      <div class="card-title">快手</div>
+      <div class="card-subtitle">Kuaishou</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">短视频</span><span class="tag">直播</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">快手是中国第二大短视频平台，DAU 超 3.7 亿。可灵 AI（Kling）是快手推出的文生视频大模型，在全球视频生成领域技术领先，与 Sora 同期发布。快手在视频理解、内容推荐、实时直播弹幕分析等...</div>
+  <div class="card-positions"><div class="pos-item">视频生成算法工程师</div><div class="pos-item">推荐算法工程师</div><div class="pos-item">多模态大模型工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>26–32K</span></span>
+    <span class="salary-annual">31–38 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/pinduoduo.html"
+   data-cats="电商|跨境电商|AI/大模型" data-search="拼多多 PDD Holdings 电商 跨境电商 AI/大模型 算法工程师 数据工程师 后端工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=pinduoduo.com&sz=64" alt="拼多多" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">拼多</span>
+    <div>
+      <div class="card-title">拼多多</div>
+      <div class="card-subtitle">PDD Holdings</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">电商</span><span class="tag">跨境电商</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">拼多多是中国第二大电商平台，GMV 持续增长。旗下 Temu 跨境电商平台已覆盖 50+ 国家，成为全球增速最快的跨境电商。拼多多薪资在互联网行业高居前列，但招聘规模小、要求极高，以结果导向文化著称。...</div>
+  <div class="card-positions"><div class="pos-item">算法工程师</div><div class="pos-item">数据工程师</div><div class="pos-item">后端工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>35–50K</span></span>
+    <span class="salary-annual">42–60 万+</span>
+  </div>
+</a>
+<a class="company-card" href="companies/didi.html"
+   data-cats="出行|自动驾驶|AI/大模型" data-search="滴滴出行 DiDi 出行 自动驾驶 AI/大模型 自动驾驶算法工程师 供需预测算法工程师 地图 AI 工程师 风控算法工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=didiglobal.com&sz=64" alt="滴滴出行" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">滴滴</span>
+    <div>
+      <div class="card-title">滴滴出行</div>
+      <div class="card-subtitle">DiDi</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">出行</span><span class="tag">自动驾驶</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">滴滴出行是中国最大的网约车平台，日均订单量超 3000 万。旗下小桔车智（自动驾驶部门）持续投入 L4 级别自动驾驶研发。滴滴在地图 AI、动态定价、路径规划、乘客安全 AI 等方向积累了丰富的算法经...</div>
+  <div class="card-positions"><div class="pos-item">自动驾驶算法工程师</div><div class="pos-item">供需预测算法工程师</div><div class="pos-item">地图 AI 工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–28K</span></span>
+    <span class="salary-annual">26–34 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/antgroup.html"
+   data-cats="金融科技|支付|AI/大模型" data-search="蚂蚁集团 Ant Group 金融科技 支付 AI/大模型 风控算法工程师 金融大模型工程师 数据科学家 隐私计算工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=antgroup.com&sz=64" alt="蚂蚁集团" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">蚂蚁</span>
+    <div>
+      <div class="card-title">蚂蚁集团</div>
+      <div class="card-subtitle">Ant Group</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">金融科技</span><span class="tag">支付</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">蚂蚁集团是全球最大的金融科技公司，旗下支付宝用户超 10 亿。百灵大模型专注于金融领域 AI，在智能投顾、反欺诈、保险核保等场景深度应用。蚂蚁在隐私计算、联邦学习、区块链等前沿方向有大量技术积累。...</div>
+  <div class="card-positions"><div class="pos-item">风控算法工程师</div><div class="pos-item">金融大模型工程师</div><div class="pos-item">数据科学家</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>26–32K</span></span>
+    <span class="salary-annual">31–38 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/sensetime.html"
+   data-cats="AI/大模型|计算机视觉|自动驾驶" data-search="商汤科技 SenseTime AI/大模型 计算机视觉 自动驾驶 计算机视觉研究员 AIGC 工程师 自动驾驶感知工程师 AI 基础架构工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=sensetime.com&sz=64" alt="商汤科技" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">商汤</span>
+    <div>
+      <div class="card-title">商汤科技</div>
+      <div class="card-subtitle">SenseTime</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag">计算机视觉</span><span class="tag">自动驾驶</span></div>
+  <div class="card-desc">商汤科技是国内最大的 AI 独角兽之一，在计算机视觉领域积累深厚，CVPR/ICCV 论文数量全球前列。日日新（SenseNova）大模型系列涵盖语言、图像、视频生成。商汤在智慧城市、智慧零售、自动驾...</div>
+  <div class="card-positions"><div class="pos-item">计算机视觉研究员</div><div class="pos-item">AIGC 工程师</div><div class="pos-item">自动驾驶感知工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–30K</span></span>
+    <span class="salary-annual">26–36 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/megvii.html"
+   data-cats="AI/大模型|计算机视觉|物流机器人" data-search="旷视科技 Megvii AI/大模型 计算机视觉 物流机器人 计算机视觉算法工程师 机器人路径规划工程师 MegEngine 框架工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=megvii.com&sz=64" alt="旷视科技" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">旷视</span>
+    <div>
+      <div class="card-title">旷视科技</div>
+      <div class="card-subtitle">Megvii</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag">计算机视觉</span><span class="tag">物流机器人</span></div>
+  <div class="card-desc">旷视科技是专注计算机视觉的 AI 公司，人脸识别技术在国内领先。自研深度学习框架 MegEngine（旷视天元）在工业部署方面有独特优势。旷视物流机器人业务增长迅速，智能仓储系统已覆盖主要头部电商仓库...</div>
+  <div class="card-positions"><div class="pos-item">计算机视觉算法工程师</div><div class="pos-item">机器人路径规划工程师</div><div class="pos-item">MegEngine 框架工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>18–25K</span></span>
+    <span class="salary-annual">22–30 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/hikvision.html"
+   data-cats="安防 AI|嵌入式|计算机视觉" data-search="海康威视 Hikvision 安防 AI 嵌入式 计算机视觉 嵌入式 AI 算法工程师 目标检测工程师 工业机器人视觉工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=hikvision.com&sz=64" alt="海康威视" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">海康</span>
+    <div>
+      <div class="card-title">海康威视</div>
+      <div class="card-subtitle">Hikvision</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">安防 AI</span><span class="tag">嵌入式</span><span class="tag">计算机视觉</span></div>
+  <div class="card-desc">海康威视是全球最大的视频安防设备供应商，市场份额超 30%。在嵌入式 AI、边缘计算芯片（DeepinMind）、视频压缩 AI 等方向拥有深厚积累。旗下萤石（Ezviz）智能家居、海康机器人（Hik...</div>
+  <div class="card-positions"><div class="pos-item">嵌入式 AI 算法工程师</div><div class="pos-item">目标检测工程师</div><div class="pos-item">工业机器人视觉工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>16–20K</span></span>
+    <span class="salary-annual">19–24 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/zhipuai.html"
+   data-cats="AI/大模型|AGI" data-search="智谱 AI Zhipu AI AI/大模型 AGI 大模型预训练研究员 Agent 框架工程师 评测工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=zhipuai.cn&sz=64" alt="智谱 AI" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">智谱</span>
+    <div>
+      <div class="card-title">智谱 AI</div>
+      <div class="card-subtitle">Zhipu AI</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-rolling">全年滚动</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag">AGI</span></div>
+  <div class="card-desc">智谱 AI 是清华大学 KEG 实验室孵化的大模型公司，代表作 GLM/ChatGLM 系列是国内最早开源的大模型之一。GLM-4 在中文理解和多轮对话方面表现优异，AutoGLM 是国内领先的 AI...</div>
+  <div class="card-positions"><div class="pos-item">大模型预训练研究员</div><div class="pos-item">Agent 框架工程师</div><div class="pos-item">评测工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>25–35K</span></span>
+    <span class="salary-annual">30–42 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/deepseek.html"
+   data-cats="AI/大模型|AGI|量化" data-search="DeepSeek DeepSeek (幻方量化) AI/大模型 AGI 量化 大模型研究员 基础设施工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=deepseek.com&sz=64" alt="DeepSeek" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">De</span>
+    <div>
+      <div class="card-title">DeepSeek</div>
+      <div class="card-subtitle">DeepSeek (幻方量化)</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-rolling">全年滚动</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag">AGI</span><span class="tag">量化</span></div>
+  <div class="card-desc">DeepSeek 由幻方量化创立，以极小团队开发出 DeepSeek-R1、DeepSeek-V3 等在全球引发轰动的大模型。DeepSeek-R1 的 reasoning 能力媲美 OpenAI o...</div>
+  <div class="card-positions"><div class="pos-item">大模型研究员</div><div class="pos-item">基础设施工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>不公开（市场顶尖）</span></span>
+    <span class="salary-annual">顶尖研究员 100 万+/年</span>
+  </div>
+</a>
+<a class="company-card" href="companies/moonshot.html"
+   data-cats="AI/大模型|AGI" data-search="月之暗面 Moonshot AI AI/大模型 AGI LLM 研究员 AI 产品工程师 基础设施工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=moonshot.cn&sz=64" alt="月之暗面" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">月之</span>
+    <div>
+      <div class="card-title">月之暗面</div>
+      <div class="card-subtitle">Moonshot AI</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-rolling">全年滚动</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag">AGI</span></div>
+  <div class="card-desc">月之暗面（Moonshot AI）由 ChatGLM 原班人马创立，Kimi 大模型以超长上下文（128K tokens）见长，在文档理解和长文本处理方面国内领先。穿越计划是月之暗面的顶尖人才专项招募...</div>
+  <div class="card-positions"><div class="pos-item">LLM 研究员</div><div class="pos-item">AI 产品工程师</div><div class="pos-item">基础设施工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–35K（因级别差异大）</span></span>
+    <span class="salary-annual">26–42 万+</span>
+  </div>
+</a>
+<a class="company-card" href="companies/minimax.html"
+   data-cats="AI/大模型|多模态" data-search="MiniMax MiniMax AI/大模型 多模态 多模态大模型研究员 语音合成工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=minimaxi.com&sz=64" alt="MiniMax" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">Mi</span>
+    <div>
+      <div class="card-title">MiniMax</div>
+      <div class="card-subtitle">MiniMax</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-rolling">全年滚动</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag">多模态</span></div>
+  <div class="card-desc">MiniMax 是国内顶尖的多模态 AI 独角兽，海螺 AI（Hailuo）是其代表性多模态产品，具备文生图、文生视频、语音合成等能力。MiniMax 技术团队背景强劲，在多模态理解和生成方向持续创新...</div>
+  <div class="card-positions"><div class="pos-item">多模态大模型研究员</div><div class="pos-item">语音合成工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–32K</span></span>
+    <span class="salary-annual">26–38 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/stepfun.html"
+   data-cats="AI/大模型|AGI" data-search="阶跃星辰 StepFun AI/大模型 AGI 大模型研究员（MoE 方向） 多模态工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=stepfun.com&sz=64" alt="阶跃星辰" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">阶跃</span>
+    <div>
+      <div class="card-title">阶跃星辰</div>
+      <div class="card-subtitle">StepFun</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-rolling">全年滚动</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag">AGI</span></div>
+  <div class="card-desc">阶跃星辰由 Cheetah Mobile 创始人 Bing Zhao 等人创立，Step-1 等大模型以万亿参数 MoE（Mixture of Experts）架构为技术路线，在推理效率和规模扩展方面...</div>
+  <div class="card-positions"><div class="pos-item">大模型研究员（MoE 方向）</div><div class="pos-item">多模态工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–35K</span></span>
+    <span class="salary-annual">26–42 万+</span>
+  </div>
+</a>
+<a class="company-card" href="companies/baichuan.html"
+   data-cats="AI/大模型|医疗 AI" data-search="百川智能 Baichuan AI AI/大模型 医疗 AI 医疗 AI 研究员 大模型训练工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=baichuan-ai.com&sz=64" alt="百川智能" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">百川</span>
+    <div>
+      <div class="card-title">百川智能</div>
+      <div class="card-subtitle">Baichuan AI</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-rolling">全年滚动</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag  tag-ai">医疗 AI</span></div>
+  <div class="card-desc">百川智能由搜狗 CEO 王小川创立，Baichuan 系列大模型开源，在中文理解和医疗 AI 领域有独特布局。医疗大模型是百川的差异化方向，致力于用 AI 解决医疗问诊、临床辅助、健康管理等问题。...</div>
+  <div class="card-positions"><div class="pos-item">医疗 AI 研究员</div><div class="pos-item">大模型训练工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–30K</span></span>
+    <span class="salary-annual">26–36 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/360.html"
+   data-cats="安全|AI/大模型|浏览器" data-search="奇虎 360 360 Group 安全 AI/大模型 浏览器 安全 AI 工程师 数据挖掘工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=360.cn&sz=64" alt="奇虎 360" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">奇虎</span>
+    <div>
+      <div class="card-title">奇虎 360</div>
+      <div class="card-subtitle">360 Group</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">安全</span><span class="tag  tag-ai">AI/大模型</span><span class="tag">浏览器</span></div>
+  <div class="card-desc">奇虎 360 是中国最大的互联网安全公司，旗下 360 安全卫士、360 浏览器用户规模庞大。360 智脑大模型专注于安全 AI 场景，包括威胁情报分析、安全代码审计、智能防御等。...</div>
+  <div class="card-positions"><div class="pos-item">安全 AI 工程师</div><div class="pos-item">数据挖掘工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>18–24K</span></span>
+    <span class="salary-annual">22–28 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/iflytek.html"
+   data-cats="AI/大模型|语音识别|教育 AI" data-search="科大讯飞 iFlytek AI/大模型 语音识别 教育 AI 语音算法工程师 大模型工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=iflytek.com&sz=64" alt="科大讯飞" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">科大</span>
+    <div>
+      <div class="card-title">科大讯飞</div>
+      <div class="card-subtitle">iFlytek</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">AI/大模型</span><span class="tag">语音识别</span><span class="tag  tag-ai">教育 AI</span></div>
+  <div class="card-desc">科大讯飞是国内语音识别技术领头企业，在语音合成、ASR、TTS 领域拥有全球领先的技术积累。星火大模型（Spark）是科大讯飞的通用大模型产品，在教育、医疗、政务等垂直行业应用广泛。...</div>
+  <div class="card-positions"><div class="pos-item">语音算法工程师</div><div class="pos-item">大模型工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>15–22K</span></span>
+    <span class="salary-annual">18–26 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/oppo.html"
+   data-cats="消费电子|端侧 AI|AI/大模型" data-search="OPPO OPPO 消费电子 端侧 AI AI/大模型 端侧 AI 算法工程师 计算摄影算法工程师 NLP 工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=oppo.com&sz=64" alt="OPPO" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">OP</span>
+    <div>
+      <div class="card-title">OPPO</div>
+      <div class="card-subtitle">OPPO</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">消费电子</span><span class="tag  tag-ai">端侧 AI</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">OPPO 是全球前五的智能手机厂商，在端侧 AI 方向持续加大投入。AndesGPT 是 OPPO 自研的端云协同大模型，在 Find 系列旗舰手机上实现本地运行。OPPO 研究院在图像处理、计算摄影...</div>
+  <div class="card-positions"><div class="pos-item">端侧 AI 算法工程师</div><div class="pos-item">计算摄影算法工程师</div><div class="pos-item">NLP 工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>18–24K</span></span>
+    <span class="salary-annual">22–28 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/xiaomi.html"
+   data-cats="消费电子|智能汽车|AI/大模型" data-search="小米 Xiaomi 消费电子 智能汽车 AI/大模型 汽车 AI 算法工程师 大模型工程师 推荐系统工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=xiaomi.com&sz=64" alt="小米" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">小米</span>
+    <div>
+      <div class="card-title">小米</div>
+      <div class="card-subtitle">Xiaomi</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">消费电子</span><span class="tag">智能汽车</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">小米是全球前四的智能手机厂商，2024 年推出小米 SU7 汽车，进军智能电动汽车赛道。MiLM 是小米自研大模型，与手机、汽车、智能家居深度集成。小米在端侧 AI、IoT 平台、AI 汽车等方向持续...</div>
+  <div class="card-positions"><div class="pos-item">汽车 AI 算法工程师</div><div class="pos-item">大模型工程师</div><div class="pos-item">推荐系统工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>23–28K</span></span>
+    <span class="salary-annual">27–34 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/netease.html"
+   data-cats="游戏|AI/大模型|教育" data-search="网易 NetEase 游戏 AI/大模型 教育 游戏 AI 工程师 推荐算法工程师 NLP/大模型工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=netease.com&sz=64" alt="网易" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">网易</span>
+    <div>
+      <div class="card-title">网易</div>
+      <div class="card-subtitle">NetEase</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">游戏</span><span class="tag  tag-ai">AI/大模型</span><span class="tag">教育</span></div>
+  <div class="card-desc">网易是中国第二大游戏公司，梦幻西游、阴阳师等经典游戏长青。网易伏羲是专注游戏 AI 的研究院，在游戏 NPC 智能、AI 内容生成、游戏测试自动化等方向全球领先。网易有道在教育 AI 领域积累了丰富的...</div>
+  <div class="card-positions"><div class="pos-item">游戏 AI 工程师</div><div class="pos-item">推荐算法工程师</div><div class="pos-item">NLP/大模型工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>20–26K</span></span>
+    <span class="salary-annual">24–31 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/xiaohongshu.html"
+   data-cats="互联网|社区电商|AI/大模型" data-search="小红书 Xiaohongshu / REDnote 互联网 社区电商 AI/大模型 推荐算法工程师 NLP 算法工程师 数据科学家">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=xiaohongshu.com&sz=64" alt="小红书" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">小红</span>
+    <div>
+      <div class="card-title">小红书</div>
+      <div class="card-subtitle">Xiaohongshu / REDnote</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">互联网</span><span class="tag">社区电商</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">小红书是中国最大的生活方式内容社区，月活用户超 3 亿，以 UGC 种草内容和社区电商为核心。2024 年起持续加码 AI 搜索（AIGC 内容增强）、多模态内容理解与推荐，成立 AI 中台团队，推进...</div>
+  <div class="card-positions"><div class="pos-item">推荐算法工程师</div><div class="pos-item">NLP 算法工程师</div><div class="pos-item">数据科学家</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>25–32K</span></span>
+    <span class="salary-annual">30–40 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/bilibili.html"
+   data-cats="互联网|视频平台|AI/大模型" data-search="哔哩哔哩 Bilibili 互联网 视频平台 AI/大模型 视频推荐算法工程师 AIGC 内容生成工程师 数据工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=bilibili.com&sz=64" alt="哔哩哔哩" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">哔哩</span>
+    <div>
+      <div class="card-title">哔哩哔哩</div>
+      <div class="card-subtitle">Bilibili</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">互联网</span><span class="tag">视频平台</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">哔哩哔哩（B站）是中国最大的年轻人视频社区，以动画、游戏、知识内容为核心，月活超 3 亿。AI 方向重点布局：视频多模态理解、AI 创作工具（AI 剪辑/字幕/封面生成）、个性化推荐与内容安全，同时在...</div>
+  <div class="card-positions"><div class="pos-item">视频推荐算法工程师</div><div class="pos-item">AIGC 内容生成工程师</div><div class="pos-item">数据工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–30K</span></span>
+    <span class="salary-annual">26–38 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/dji.html"
+   data-cats="硬科技|无人机|嵌入式AI|机器人" data-search="大疆创新 DJI 硬科技 无人机 嵌入式AI 机器人 计算机视觉工程师 SLAM 算法工程师 嵌入式 AI 工程师 机器学习工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=dji.com&sz=64" alt="大疆创新" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">大疆</span>
+    <div>
+      <div class="card-title">大疆创新</div>
+      <div class="card-subtitle">DJI</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">硬科技</span><span class="tag">无人机</span><span class="tag  tag-ai">嵌入式AI</span><span class="tag">机器人</span></div>
+  <div class="card-desc">大疆创新（DJI）是全球无人机市场领导者，占据全球消费级无人机 70% 以上市场份额。核心技术方向：飞控算法、计算机视觉（避障/目标跟踪）、嵌入式 AI 推理、SLAM 与三维重建。DJI 在深圳总部...</div>
+  <div class="card-positions"><div class="pos-item">计算机视觉工程师</div><div class="pos-item">SLAM 算法工程师</div><div class="pos-item">嵌入式 AI 工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>22–30K</span></span>
+    <span class="salary-annual">26–36 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/horizon.html"
+   data-cats="自动驾驶|芯片|AI/大模型|硬科技" data-search="地平线 Horizon Robotics 自动驾驶 芯片 AI/大模型 硬科技 自动驾驶感知算法工程师 AI 编译器工程师 量化与推理优化工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=horizon.auto&sz=64" alt="地平线" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">地平</span>
+    <div>
+      <div class="card-title">地平线</div>
+      <div class="card-subtitle">Horizon Robotics</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">自动驾驶</span><span class="tag">芯片</span><span class="tag  tag-ai">AI/大模型</span><span class="tag">硬科技</span></div>
+  <div class="card-desc">地平线（Horizon Robotics）是中国领先的车规级 AI 芯片与智能驾驶解决方案公司，旗下征程系列芯片已前装量产超 600 万辆。2024 年在港交所上市（HKEx），商业化加速。核心技术方...</div>
+  <div class="card-positions"><div class="pos-item">自动驾驶感知算法工程师</div><div class="pos-item">AI 编译器工程师</div><div class="pos-item">量化与推理优化工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>24–32K</span></span>
+    <span class="salary-annual">28–40 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/cambricon.html"
+   data-cats="芯片|AI/大模型|硬科技" data-search="寒武纪 Cambricon 芯片 AI/大模型 硬科技 AI 框架工程师 芯片验证工程师 AI 推理优化工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=cambricon.com&sz=64" alt="寒武纪" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">寒武</span>
+    <div>
+      <div class="card-title">寒武纪</div>
+      <div class="card-subtitle">Cambricon</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">芯片</span><span class="tag  tag-ai">AI/大模型</span><span class="tag">硬科技</span></div>
+  <div class="card-desc">寒武纪是国内最早的 AI 芯片上市公司（A 股：688256），专注于云端训练/推理 AI 芯片（思元系列）、边缘芯片及 AI 基础软件（Cambricon Neuware）。近年来深耕 AI 大模型...</div>
+  <div class="card-positions"><div class="pos-item">AI 框架工程师</div><div class="pos-item">芯片验证工程师</div><div class="pos-item">AI 推理优化工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>18–28K</span></span>
+    <span class="salary-annual">22–35 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/4paradigm.html"
+   data-cats="企业AI|AI/大模型|MLOps" data-search="第四范式 4Paradigm 企业AI AI/大模型 MLOps 机器学习工程师 - AutoML 大模型工程师 解决方案工程师（AI）">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=4paradigm.com&sz=64" alt="第四范式" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">第四</span>
+    <div>
+      <div class="card-title">第四范式</div>
+      <div class="card-subtitle">4Paradigm</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag  tag-ai">企业AI</span><span class="tag  tag-ai">AI/大模型</span><span class="tag">MLOps</span></div>
+  <div class="card-desc">第四范式是国内企业级 AI 解决方案领军企业，专注 AutoML（SAGE 平台）、特征工程、企业大模型 HiThink 等产品，服务金融、零售、工业等行业。2023 年在港交所上市，持续扩展 AI ...</div>
+  <div class="card-positions"><div class="pos-item">机器学习工程师 - AutoML</div><div class="pos-item">大模型工程师</div><div class="pos-item">解决方案工程师（AI）</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>20–28K</span></span>
+    <span class="salary-annual">24–35 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/ctrip.html"
+   data-cats="互联网|旅游出行|AI/大模型" data-search="携程旅行 Trip.com Group 互联网 旅游出行 AI/大模型 推荐算法工程师 NLP 工程师 数据科学家">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=trip.com&sz=64" alt="携程旅行" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">携程</span>
+    <div>
+      <div class="card-title">携程旅行</div>
+      <div class="card-subtitle">Trip.com Group</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">互联网</span><span class="tag">旅游出行</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">携程集团（Trip.com Group）是全球最大在线旅行平台之一，旗下品牌包括携程、去哪儿、天巡（Skyscanner）、铁路 123 等。AI 应用场景极为丰富：行程规划 AI（AI Trip P...</div>
+  <div class="card-positions"><div class="pos-item">推荐算法工程师</div><div class="pos-item">NLP 工程师</div><div class="pos-item">数据科学家</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>20–28K</span></span>
+    <span class="salary-annual">24–34 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/weibo.html"
+   data-cats="互联网|社交媒体|AI/大模型" data-search="微博 Sina Weibo 互联网 社交媒体 AI/大模型 推荐算法工程师 NLP/内容安全工程师 广告算法工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=weibo.com&sz=64" alt="微博" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">微博</span>
+    <div>
+      <div class="card-title">微博</div>
+      <div class="card-subtitle">Sina Weibo</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">互联网</span><span class="tag">社交媒体</span><span class="tag  tag-ai">AI/大模型</span></div>
+  <div class="card-desc">微博是中国最大的社交媒体平台，月活超 5 亿，以热搜、娱乐内容和公共讨论为核心场景。AI 方向重点：内容推荐与过滤（文本+图片+视频多模态）、热点事件检测与分类、智能广告定向、反垃圾/谣言检测，以及近...</div>
+  <div class="card-positions"><div class="pos-item">推荐算法工程师</div><div class="pos-item">NLP/内容安全工程师</div><div class="pos-item">广告算法工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>18–26K</span></span>
+    <span class="salary-annual">22–32 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/vivo.html"
+   data-cats="硬科技|手机/IoT|嵌入式AI" data-search="vivo vivo 硬科技 手机/IoT 嵌入式AI 端侧 AI 算法工程师 图像算法工程师 NLP 大模型工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=vivo.com&sz=64" alt="vivo" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">vi</span>
+    <div>
+      <div class="card-title">vivo</div>
+      <div class="card-subtitle">vivo</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">硬科技</span><span class="tag">手机/IoT</span><span class="tag  tag-ai">嵌入式AI</span></div>
+  <div class="card-desc">vivo 是全球前五大智能手机品牌，在国内高端市场快速崛起（X 系列、折叠屏）。AI 布局重点：蓝心大模型（Blue LM，端侧+云端双模态）、端侧 AI 推理加速、相机 AI（ProXDR 算法）、...</div>
+  <div class="card-positions"><div class="pos-item">端侧 AI 算法工程师</div><div class="pos-item">图像算法工程师</div><div class="pos-item">NLP 大模型工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>20–28K</span></span>
+    <span class="salary-annual">24–34 万</span>
+  </div>
+</a>
+<a class="company-card" href="companies/pingan-tech.html"
+   data-cats="金融科技|AI/大模型|企业AI" data-search="平安科技 Ping An Technology 金融科技 AI/大模型 企业AI AI 算法工程师 - 金融风控 NLP/大模型工程师 医疗 AI 工程师 数据工程师">
+  <div class="card-header">
+    <img class="co-logo" src="https://www.google.com/s2/favicons?domain=pingan.com&sz=64" alt="平安科技" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><span class="co-logo-fallback">平安</span>
+    <div>
+      <div class="card-title">平安科技</div>
+      <div class="card-subtitle">Ping An Technology</div>
+    </div>
+  </div>
+  <div class="detail-status"><span class="status-dot status-soon">即将开放</span></div>
+  <div class="card-tags"><span class="tag">金融科技</span><span class="tag  tag-ai">AI/大模型</span><span class="tag  tag-ai">企业AI</span></div>
+  <div class="card-desc">平安科技是中国平安集团旗下科技子公司，是国内金融 AI 领域最大的工程团队之一。核心产品：医疗 AI（AskBob 智能医生助手）、金融 AI（智能核保/理赔/风控）、平安云及 AI 能力平台。202...</div>
+  <div class="card-positions"><div class="pos-item">AI 算法工程师 - 金融风控</div><div class="pos-item">NLP/大模型工程师</div><div class="pos-item">医疗 AI 工程师</div></div>
+  <div class="card-footer">
+    <span class="salary-base">月薪 <span>18–28K</span></span>
+    <span class="salary-annual">22–35 万</span>
+  </div>
+</a>
+  </div>
+</div>
+<div class="footer">
+  <div class="container">
+    数据仅供参考，请以各公司官方渠道为准 · 生成时间：2026-05-24 10:23
+  </div>
+</div>
+
+<script>
+(function(){
+  var cards;
+  function init() {
+    cards = Array.from(document.querySelectorAll('.company-card'));
+    document.querySelectorAll('.pill').forEach(function(p){
+      p.addEventListener('click', function(){
+        document.querySelectorAll('.pill').forEach(function(x){ x.classList.remove('active'); });
+        this.classList.add('active');
+        applyAll();
+      });
+    });
+    var s = document.getElementById('search');
+    if(s) s.addEventListener('input', applyAll);
+  }
+  function applyAll() {
+    var activePill = document.querySelector('.pill.active');
+    var cat = activePill ? activePill.getAttribute('data-cat') : 'all';
+    var searchEl = document.getElementById('search');
+    var q = searchEl ? searchEl.value.trim().toLowerCase() : '';
+    cards.forEach(function(card){
+      var cardCats = card.getAttribute('data-cats') || '';
+      var cardText = (card.getAttribute('data-search') || '').toLowerCase();
+      var matchCat = (cat === 'all') || (cardCats.indexOf(cat) !== -1);
+      var matchQ = !q || cardText.indexOf(q) !== -1;
+      card.classList.toggle('hidden', !(matchCat && matchQ));
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
+})();
+</script>
+
+
+<script>
+function toggleTheme() {
+  var cur = document.documentElement.getAttribute('data-theme');
+  var next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('theme-btn').textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var cur = document.documentElement.getAttribute('data-theme');
+  var btn = document.getElementById('theme-btn');
+  if (btn) btn.textContent = cur === 'dark' ? 'Light Mode' : 'Dark Mode';
+});
+</script>
+
+</body>
+</html>
